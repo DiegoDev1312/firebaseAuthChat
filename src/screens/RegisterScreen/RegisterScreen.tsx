@@ -1,16 +1,16 @@
 import React from 'react'; 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { StatusBar } from 'expo-status-bar';
 import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
 
 import * as S from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { createUser, loginUser } from '../../services/users';
+import { createUser } from '../../services/users';
 import { useNavigation } from '@react-navigation/native';
 import { AuthScreenProp, AuthInternalProp } from '../../utils/types';
+import Gradient from '../../components/Gradient';
 
 interface InputProps {
     email: string;
@@ -48,12 +48,8 @@ export default function RegisterScreen() {
 
     return (
         <S.Container>
-            <StatusBar style="dark"  />
             <S.KeyboardScrollView>
-                <S.Gradient
-                    colors={['#1A1A1A', '#252525']}
-                    start={{ x: 0.6, y: 0.6 }}
-                >
+                <Gradient>
                     <S.ContainerAlign>
                         <S.LogoArea>
                             <S.LogoName>T</S.LogoName>
@@ -95,7 +91,7 @@ export default function RegisterScreen() {
                             <S.LoginText>Voltar para o login</S.LoginText>
                         </S.GoToLogin>
                     </S.ContainerAlign>
-                </S.Gradient>
+                </Gradient>
             </S.KeyboardScrollView>
         </S.Container>
     );

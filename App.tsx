@@ -28,7 +28,7 @@ export default function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ThemeProvider theme={theme}>
-              <StatusBar style="dark"  />
+              <StatusBar backgroundColor="#1A1A1A"  />
               <MainStack />
           </ThemeProvider>
         </PersistGate>

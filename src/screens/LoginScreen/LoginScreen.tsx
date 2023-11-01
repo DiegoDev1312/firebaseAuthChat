@@ -10,6 +10,7 @@ import Button from '../../components/Button';
 import { getUserInfo, loginUser } from '../../services/users';
 import { AuthScreenProp, AuthInternalProp } from '../../utils/types';
 import { actionLoginUser } from '../../redux/user/actions';
+import Gradient from '../../components/Gradient';
 
 interface InputProps {
     email: string;
@@ -46,10 +47,7 @@ export default function LoginScreen() {
     return (
         <S.Container>
             <S.KeyboardScrollView>
-                <S.Gradient
-                    colors={['#1A1A1A', '#252525']}
-                    start={{ x: 0.6, y: 0.6 }}
-                >
+                <Gradient>
                     <S.ContainerAlign>
                         <S.LogoArea>
                             <S.LogoName>T</S.LogoName>
@@ -76,7 +74,7 @@ export default function LoginScreen() {
                             <S.RegisterText>Cadastrar-se</S.RegisterText>
                         </S.RegisterButton>
                     </S.ContainerAlign>
-                </S.Gradient>
+                </Gradient>
             </S.KeyboardScrollView>
         </S.Container>
     );
