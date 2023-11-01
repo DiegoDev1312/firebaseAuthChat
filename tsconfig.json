@@ -1,0 +1,6 @@
+{
+  "compilerOptions": { },
+  "includes": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "styled-components.d.ts"],
+  "extends": "expo/tsconfig.base"
+  
+}
