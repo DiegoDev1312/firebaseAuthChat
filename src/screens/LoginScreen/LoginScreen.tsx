@@ -50,9 +50,12 @@ export default function LoginScreen() {
             return navigation.dispatch(
                 CommonActions.reset(commonActionsInfo)
             );
-        } else {
-            toast.show('Error ao fazer login!', toastErrorOptions);
         }
+        if (response === 'auth/invalid-login') {
+            return toast.show('E-mail ou senha inválido!', toastErrorOptions);
+        }
+        return toast.show('Error ao fazer login!', toastErrorOptions);
+
     };
 
     const handleRegisterPress = () => {

@@ -24,7 +24,7 @@ export default function HomeScreen() {
                 const commonActionsInfo = {
                     index: 1,
                     routes: [
-                        { name: 'Home' },
+                        { name: 'Login' },
                     ],
                 };
                 navigation.dispatch(

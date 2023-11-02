@@ -2,9 +2,9 @@ import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import uuid from 'react-native-uuid';
 import { useToast } from "react-native-toast-notifications";
 import { CommonActions } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
 
 import * as S from './styles';
 import Input from '../../components/Input';
@@ -13,6 +13,7 @@ import { createUser } from '../../services/users';
 import { useNavigation } from '@react-navigation/native';
 import { AuthScreenProp, AuthInternalProp, toastSuccessOption, toastErrorOptions } from '../../utils/types';
 import Gradient from '../../components/Gradient';
+import { actionLoginUser } from '../../redux/user/actions';
 
 interface InputProps {
     email: string;
@@ -27,7 +28,7 @@ export default function RegisterScreen() {
         email: yup.string().email('E-mail inválido!').required('Insira o e-mail!'),
         password: yup.string().required('Insira a senha!').min(6, 'Senha menor que 6 dígitos!'),
         name: yup.string().required('Digite seu nome!').min(2, 'Insira um nome válido!'),
-        age: yup.number().required('Digite sua idade!').min(16, 'Aplicativo apenas para maiorar de 16 anos!'),
+        age: yup.number().required('Digite sua idade!').min(16, 'Aplicativo apenas para maiores de 16 anos!').typeError('Digite sua idade'),
     }).required();
     const resolver = { resolver: yupResolver(userSchemaForm) };
     const {
@@ -36,6 +37,7 @@ export default function RegisterScreen() {
         handleSubmit,
     } = useForm<InputProps>(resolver);
     const navigation = useNavigation<AuthScreenProp & AuthInternalProp>();
+    const dispatch = useDispatch();
 
     const handleRegisterPress = async(data: InputProps) => {
         const commonActionsInfo = {
@@ -44,16 +46,18 @@ export default function RegisterScreen() {
                 { name: 'Home' },
             ],
         };
-        const idUser = uuid.v4();
-        const response = await createUser(data, idUser);
+        const response = await createUser(data);
         if (response?.user) {
             toast.show('Usuário criado com sucesso', toastSuccessOption);
+            dispatch(actionLoginUser(response.user));
             return navigation.dispatch(
                 CommonActions.reset(commonActionsInfo)
             );
-        } else {
-            toast.show('Error ao criar usuário!', toastErrorOptions);
         }
+        if (response === 'auth/email-already-in-use') {
+            return toast.show('E-mail já está em uso!', toastErrorOptions);
+        }
+        toast.show('Ocorreu um erro no cadastro!', toastErrorOptions);
     };
 
     const handleLoginPress = () => {

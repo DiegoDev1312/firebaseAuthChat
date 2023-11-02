@@ -11,7 +11,7 @@ export interface RegisterInfo {
     age: number;
 }
 
-export async function createUser(user: RegisterInfo & LoginUser, id: string | number[]) {
+export async function createUser(user: RegisterInfo & LoginUser) {
     return await auth().createUserWithEmailAndPassword(user.email, user.password)
         .then(async (response) => {
             const bodyCreate = {
@@ -27,9 +27,9 @@ export async function createUser(user: RegisterInfo & LoginUser, id: string | nu
                 .collection('users')
                 .doc(response.user.uid)
                 .set(bodyCreate)
-            return response;
+            return { user: bodyCreate };
         }).catch((error) => {
-            return error;
+            return error.code;
         });
 }
 
@@ -38,7 +38,7 @@ export async function loginUser(user: LoginUser) {
         .then((response) => {
             return response;
         }).catch((error) => {
-            return error;
+            return error.code;
         });
 }
 
