@@ -3,13 +3,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import uuid from 'react-native-uuid';
+import { useToast } from "react-native-toast-notifications";
+import { CommonActions } from '@react-navigation/native';
 
 import * as S from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { createUser } from '../../services/users';
 import { useNavigation } from '@react-navigation/native';
-import { AuthScreenProp, AuthInternalProp } from '../../utils/types';
+import { AuthScreenProp, AuthInternalProp, toastSuccessOption, toastErrorOptions } from '../../utils/types';
 import Gradient from '../../components/Gradient';
 
 interface InputProps {
@@ -20,6 +22,7 @@ interface InputProps {
 }
 
 export default function RegisterScreen() {
+    const toast = useToast();
     const userSchemaForm = yup.object({
         email: yup.string().email('E-mail inválido!').required('Insira o e-mail!'),
         password: yup.string().required('Insira a senha!').min(6, 'Senha menor que 6 dígitos!'),
@@ -35,10 +38,21 @@ export default function RegisterScreen() {
     const navigation = useNavigation<AuthScreenProp & AuthInternalProp>();
 
     const handleRegisterPress = async(data: InputProps) => {
+        const commonActionsInfo = {
+            index: 1,
+            routes: [
+                { name: 'Home' },
+            ],
+        };
         const idUser = uuid.v4();
         const response = await createUser(data, idUser);
         if (response?.user) {
-            return navigation.navigate('Home');
+            toast.show('Usuário criado com sucesso', toastSuccessOption);
+            return navigation.dispatch(
+                CommonActions.reset(commonActionsInfo)
+            );
+        } else {
+            toast.show('Error ao criar usuário!', toastErrorOptions);
         }
     };
 
@@ -81,6 +95,7 @@ export default function RegisterScreen() {
                             name="password"
                             control={control}
                             errors={errors}
+                            type="password"
                             placeholder="Senha"
                         />
                         <Button

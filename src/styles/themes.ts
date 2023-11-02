@@ -8,6 +8,7 @@ const themes = {
         gray: '#CCCCCC',
         blue: '#286FCB',
         red: '#FF0000',
+        orange: '#CB8328',
     },
     fonts: {
         bold: 'PlaypenSans-Bold',

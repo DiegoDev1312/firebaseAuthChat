@@ -28,19 +28,32 @@ export async function createUser(user: RegisterInfo & LoginUser, id: string | nu
                 .doc(response.user.uid)
                 .set(bodyCreate)
             return response;
-        })
+        }).catch((error) => {
+            return error;
+        });
 }
 
 export async function loginUser(user: LoginUser) {
     return await auth().signInWithEmailAndPassword(user.email, user.password)
         .then((response) => {
-            console.log(response);
             return response;
+        }).catch((error) => {
+            return error;
         });
 }
 
 export async function getUserInfo(idUser: string) {
-    console.log('idUser', idUser);
     const userInfo = await firestore().collection('users').doc(idUser).get();
     return userInfo.data();
+}
+
+
+export async function signOutUser(userId: string) {
+    await auth().signOut().then(async () => {
+        await firestore().doc(`users/${userId}`).update({
+            online: false,
+        });
+    }).catch((error) => {
+        console.log(error)
+    });
 }

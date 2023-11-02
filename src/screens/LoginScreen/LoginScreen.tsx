@@ -1,14 +1,17 @@
 import React from 'react'; 
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useForm } from 'react-hook-form';import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
+import { useToast } from "react-native-toast-notifications";
+import { CommonActions } from '@react-navigation/native';
 
 import * as S from './styles';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { getUserInfo, loginUser } from '../../services/users';
-import { AuthScreenProp, AuthInternalProp } from '../../utils/types';
+import { AuthScreenProp, AuthInternalProp, toastSuccessOption, toastErrorOptions } from '../../utils/types';
 import { actionLoginUser } from '../../redux/user/actions';
 import Gradient from '../../components/Gradient';
 
@@ -18,6 +21,7 @@ interface InputProps {
 }
 
 export default function LoginScreen() {
+    const toast = useToast();
     const userSchemaForm = yup.object({
         email: yup.string().email('E-mail inválido!').required('Insira o e-mail!'),
         password: yup.string().required('Insira a senha!').min(6, 'Senha menor que 6 dígitos!'),
@@ -34,9 +38,20 @@ export default function LoginScreen() {
     const handleLoginPress = async(data: InputProps) => {
         const response = await loginUser(data);
         if (response.user) {
+            const commonActionsInfo = {
+                index: 1,
+                routes: [
+                    { name: 'Home' },
+                ],
+            };
+            toast.show('Login efetuado com sucesso!', toastSuccessOption);
             const userInfo = await getUserInfo(response.user.uid);
             dispatch(actionLoginUser(userInfo));
-            navigation.navigate('Home');
+            return navigation.dispatch(
+                CommonActions.reset(commonActionsInfo)
+            );
+        } else {
+            toast.show('Error ao fazer login!', toastErrorOptions);
         }
     };
 
@@ -64,7 +79,8 @@ export default function LoginScreen() {
                             name="password"
                             control={control}
                             errors={errors}
-                            placeholder="Password"
+                            placeholder="Senha"
+                            type="password"
                         />
                         <Button
                             title="Entrar"

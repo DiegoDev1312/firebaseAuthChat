@@ -1,9 +1,11 @@
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
+import { RootState } from '../redux/root-reducer';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -18,9 +20,7 @@ const Stack = createNativeStackNavigator<RootStackParamList & RootStackInternalL
 
 export default function MainStack() {
     const defaultOptions = { headerShown: false };
-    const { currentUser } = useSelector((rootReducer) => rootReducer.userReducer);
-
-    console.log('currentUser', currentUser);
+    const { currentUser } = useSelector((rootReducer: RootState) => rootReducer.userReducer);
 
     function getInitialRouteName() {
         if (currentUser) {

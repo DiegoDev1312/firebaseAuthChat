@@ -17,6 +17,7 @@ interface InputProps {
     control: any;
     name: FieldName<FieldValues>;
     keyboardType?: string;
+    type?: string;
 }
 
 export default function Input({
@@ -25,8 +26,6 @@ export default function Input({
     ...rest
 }: InputProps) {
     const getError = rest?.errors[rest.name]?.message;
-
-    console.log('errors', rest.errors);
     return (
         <S.InputArea>
             <S.InputTitle>{title}</S.InputTitle>
@@ -38,6 +37,7 @@ export default function Input({
                             {...rest}
                             placeholder={placeholder}
                             onChangeText={onChange}
+                            secureTextEntry={rest.type === 'password'}
                         />
                     )}
                 />
